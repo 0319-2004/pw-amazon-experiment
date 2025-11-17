@@ -3,7 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>Amazon パスワード実験</title>
+
+  <!-- 見た目調整用の簡単なCSS -->
+  <style>
+    /* パスワード入力欄だけ赤枠にする */
+    input[type="password"] {
+      border: 2px solid red;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* 少しだけスマホ向けに幅を広げる（お好みで） */
+    @media (max-width: 600px) {
+      input[type="password"] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <h1>Amazon パスワード実験</h1>
   <p>
