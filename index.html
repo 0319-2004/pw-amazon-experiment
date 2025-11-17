@@ -15,15 +15,22 @@
 
   <div id="step1">
     <p>
-      あなたは、<strong>自分の Amazon アカウント</strong>のために、
-      新しいパスワードを設定するとします。<br/>
-      ここでは、実際に使っているパスワードではなく、
-      <strong>「本物に似せたダミーパスワード」</strong>を入力してください。
+       あなたは、<strong>自分の Amazon アカウント</strong>のために、
+       新しいパスワードを設定するとします。<br/>
+       ここでは、実際に使っているパスワードではなく、
+       <strong>「本物に似せたダミーパスワード」</strong>を入力してください。<br/>
+       ※本物のパスワードは絶対に入力しないでください。<br/><br/>
+
+       <em>
+        Imagine you are setting a new password for <strong>your own Amazon account</strong>.<br/>
+        Here, please enter a <strong>dummy password that only looks similar to your real one</strong>,<br/>
+        and never type your actual password.<br/>
+       </em>
     </p>
 
     <form id="form1">
       <div>
-        <label>年齢グループ:
+        <label>年齢グループ/age group:
           <select id="age_group" required>
             <option value="">選択してください</option>
             <option value="1">18–22</option>
@@ -34,15 +41,16 @@
       </div>
 
       <div>
-        <label>属性:
+        <label>属性 / Role:
           <select id="role" required>
-            <option value="">選択してください</option>
-            <option value="1">学生</option>
-            <option value="2">社会人</option>
-            <option value="3">その他</option>
+            <option value="">選択してください / Please select</option>
+            <option value="1">学生 / Student</option>
+            <option value="2">社会人 / Working adult</option>
+            <option value="3">その他 / Other</option>
           </select>
         </label>
       </div>
+
 
       <div>
   　　　　<label>1回目のダミーパスワード:
@@ -75,20 +83,26 @@
 
 
       <div>
-        <p>Q1. 2回目では、1回目と比べて内容を変えましたか？</p>
+        <p>
+          Q1. 2回目では、1回目と比べて内容を変えましたか？<br/>
+          <em>Did you change the content of your password in the second input compared to the first one?</em>
+        </p>
         <label><input type="radio" name="changed_pw" value="1" required> はい</label>
         <label><input type="radio" name="changed_pw" value="0"> いいえ / ほぼ同じ</label>
       </div>
 
       <div>
-        <p>Q2. 今回の入力をきっかけに、本当のパスワードの見直しをしたいと思いましたか？</p>
+        <p>
+          Q2. 今回の入力をきっかけに、本当のパスワードの見直しをしたいと思いましたか？<br/>
+          <em>Did this task make you feel that you want to review your real passwords?</em>
+        </p>
         <select id="intent_change" required>
           <option value="">選択してください</option>
-          <option value="1">1 全く思わない</option>
+          <option value="1">1 全く思わない / Not at all</option>
           <option value="2">2</option>
-          <option value="3">3 どちらとも言えない</option>
+          <option value="3">3 どちらとも言えない / Neutral</option>
           <option value="4">4</option>
-          <option value="5">5 とてもそう思う</option>
+          <option value="5">5 とてもそう思う / Very much</option>
         </select>
       </div>
 
@@ -120,68 +134,119 @@
     function hasUpper(str) { return /[A-Z]/.test(str) ? 1 : 0; }
     function hasDigit(str) { return /[0-9]/.test(str) ? 1 : 0; }
     function hasSymbol(str) { return /[^A-Za-z0-9]/.test(str) ? 1 : 0; }
+    // 介入メッセージ（日英併記）
+function getMessageHtml(cond) {
+  if (cond === 1) {
+    // フィア条件（恐怖フレーミング）
+    return `
+      <strong>【弱いパスワードのリスク】</strong><br>
+      単純なパスワードや、他のサービスと同じパスワードを使い回していると、
+      パスワードが漏れたときに <strong>Amazon アカウントが不正に使われるおそれ</strong>があります。<br><br>
+      もし第三者に Amazon アカウントを乗っ取られると、<br>
+      ・勝手に商品を注文される<br>
+      ・自宅や実家の住所が見られてしまう<br>
+      ・購入履歴から、趣味や生活パターンを推測される<br>
+      など、<strong>お金やプライバシーに関わるトラブル</strong>につながる可能性があります。<br><br>
+      こうしたリスクは、<br>
+      ・充分な長さがあること<br>
+      ・英小文字・英大文字・数字・記号を混ぜること<br>
+      ・Amazon 用に他のサービスと違うパスワードを使うこと<br>
+      を意識することで、かなり減らすことができます。<br><br>
 
-    // 介入メッセージ
-    function getMessageHtml(cond) {
-      if (cond === 1) {
-        // フィア条件
-        return `
-          <strong>【弱いパスワードのリスク】</strong><br>
-          単純なパスワードや、他のサービスと同じパスワードを使い回していると、
-          何らかのきっかけでパスワードが漏れたときに、
-          <strong>Amazon アカウントが不正に使われるおそれ</strong>があります。<br><br>
-          もし第三者に Amazon アカウントを乗っ取られると、<br>
-          ・勝手に商品を注文される<br>
-          ・自宅や実家の住所が見られてしまう<br>
-          ・購入履歴から、趣味や生活パターンを推測される<br>
-          など、<strong>お金やプライバシーに関わるトラブル</strong>につながる可能性があります。<br><br>
-          こうしたリスクは、<br>
-          ・充分な長さがあること<br>
-          ・英小文字・英大文字・数字・記号を混ぜること<br>
-          ・Amazon 用に他のサービスと違うパスワードを使うこと<br>
-          を意識することで、かなり減らすことができます。<br><br>
-          <hr>
-          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
-          もう一度「本物に似せたダミーパスワード」を作って入力してください。
-        `;
-      } else if (cond === 2) {
-        // ポジティブ条件
-        return `
-          <strong>【強いパスワードのメリット】</strong><br>
-          調査では、ある程度の長さがあり、
-          英小文字・英大文字・数字・記号を組み合わせ、
-          Amazon 専用のパスワードを使っているユーザーは、
-          <strong>アカウント乗っ取りのリスクを大きく減らせる「セキュリティ優等生」グループ</strong>
-          に入ると報告されています。<br><br>
-          強いパスワードを1つ考えておくことで、<br>
-          ・勝手に商品を注文されにくくなる<br>
-          ・住所や購入履歴など、生活に関わる情報を守りやすくなる<br>
-          など、<strong>お金とプライバシーの両方を守りやすくなります。</strong><br><br>
-          この機会に、「自分なら Amazon アカウント用にどんな安全なパスワードを作れるか」を試してみることで、
-          <strong>上位20％レベルの安全なユーザー</strong>に近づくことができます。<br><br>
-          <hr>
-          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
-          もう一度「本物に似せたダミーパスワード」を作って入力してください。
-        `;
-      } else {
-        // 中立条件
-        return `
-          <strong>【パスワードの一般的な推奨事項】</strong><br>
-          オンラインサービスでは、推測されにくいパスワードを使うことが推奨されています。
-          Amazon のようなショッピングサイトも同様に、
-          パスワードの強さがアカウント保護にとって重要だとされています。<br><br>
-          一般的な目安としては、<br>
-          ・8文字以上であること<br>
-          ・英小文字・英大文字・数字・記号を組み合わせていること<br>
-          がよく挙げられます。<br><br>
-          これらはあくまで「一般的な目安」であり、
-          実際のサービスごとに細かな条件は異なります。<br><br>
-          <hr>
-          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
-          もう一度「本物に似せたダミーパスワード」を作って入力してください。
-        `;
-      }
-    }
+      <em>
+        <strong>[Risks of weak passwords]</strong><br>
+        If you use simple passwords or reuse the same password across services,
+        your Amazon account may be misused if the password is leaked.<br><br>
+        If someone takes over your Amazon account, they may:<br>
+        ・Order items without your permission<br>
+        ・See your home or family address<br>
+        ・Infer your hobbies and lifestyle from your purchase history<br>
+        which can cause financial and privacy problems.<br><br>
+        These risks can be reduced by:<br>
+        ・Using sufficiently long passwords<br>
+        ・Mixing lowercase, uppercase, digits, and symbols<br>
+        ・Using a different password for Amazon than for other services<br><br>
+      </em>
+
+      <hr>
+      それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+      もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
+      <em>
+        Now, please imagine your Amazon account again and enter another dummy password.
+      </em>
+    `;
+  } else if (cond === 2) {
+    // ポジティブ条件（ゲインフレーミング）
+    return `
+      <strong>【強いパスワードのメリット】</strong><br>
+      調査では、ある程度の長さがあり、
+      英小文字・英大文字・数字・記号を組み合わせ、
+      Amazon 専用のパスワードを使っているユーザーは、
+      <strong>アカウント乗っ取りのリスクを大きく減らせる「セキュリティ優等生」グループ</strong>
+      に入ると報告されています。<br><br>
+      強いパスワードを1つ考えておくことで、<br>
+      ・勝手に商品を注文されにくくなる<br>
+      ・住所や購入履歴など、生活に関わる情報を守りやすくなる<br>
+      など、<strong>お金とプライバシーの両方を守りやすくなります。</strong><br><br>
+      この機会に、「自分なら Amazon アカウント用にどんな安全なパスワードを作れるか」を試してみることで、
+      <strong>上位20％レベルの安全なユーザー</strong>に近づくことができます。<br><br>
+
+      <em>
+        <strong>[Benefits of strong passwords]</strong><br>
+        Studies report that users who have long passwords, combine lowercase, uppercase,
+        digits, and symbols, and use a dedicated password for Amazon
+        belong to a “high-security group” with much lower account takeover risk.<br><br>
+        By creating a strong password, you can:<br>
+        ・Reduce the chance of unauthorized orders<br>
+        ・Better protect your address and purchase history<br>
+        and more easily protect both your money and privacy.<br><br>
+        This task is a chance to try what kind of safe Amazon password you can design,
+        and to move closer to the top 20% of secure users.<br><br>
+      </em>
+
+      <hr>
+      それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+      もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
+      <em>
+        Now, please imagine your Amazon account again and enter another dummy password.
+      </em>
+    `;
+  } else {
+    // 中立条件
+    return `
+      <strong>【パスワードの一般的な推奨事項】</strong><br>
+      オンラインサービスでは、推測されにくいパスワードを使うことが推奨されています。
+      Amazon のようなショッピングサイトも同様に、
+      パスワードの強さがアカウント保護にとって重要だとされています。<br><br>
+
+      一般的な目安としては、<br>
+      ・8文字以上であること<br>
+      ・英小文字・英大文字・数字・記号を組み合わせていること<br>
+      がよく挙げられます。<br><br>
+
+      <em>
+        <strong>[General advice on passwords]</strong><br>
+        Many online services recommend using passwords that are hard to guess.
+        For shopping sites like Amazon, password strength is also important for protecting your account.<br><br>
+        Common guidelines include:<br>
+        ・Using at least 8 characters<br>
+        ・Combining lowercase letters, uppercase letters, digits, and symbols<br><br>
+      </em>
+
+      これらはあくまで「一般的な目安」であり、
+      実際のサービスごとに細かな条件は異なります。<br><br>
+
+      <hr>
+      それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+      もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
+      <em>
+        Now, please imagine your Amazon account again and enter another dummy password.
+      </em>
+    `;
+  }
+}
+
+    
     // === パスワード表示・非表示トグル ===
     const pw1Input = document.getElementById('pw1');
     const pw1Show  = document.getElementById('pw1_show');
