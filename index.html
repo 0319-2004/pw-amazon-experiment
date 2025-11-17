@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amazon パスワード実験</title>
+</head>
+<body>
+  <h1>Amazon パスワード実験</h1>
+  <p>
+    このページは、大学の研究で使用している簡単なアンケートです。<br>
+    入力していただくパスワードは <strong>必ずダミー</strong> とし、
+    実際に使っているものは入力しないでください。<br>
+    送信されたデータは統計的にのみ利用され、個人を特定する目的では使用しません。
+  </p>
+
+  <div id="step1">
+    <p>
+      あなたは、<strong>自分の Amazon アカウント</strong>のために、
+      新しいパスワードを設定するとします。<br/>
+      ここでは、実際に使っているパスワードではなく、
+      <strong>「本物に似せたダミーパスワード」</strong>を入力してください。
+    </p>
+
+    <form id="form1">
+      <div>
+        <label>年齢グループ:
+          <select id="age_group" required>
+            <option value="">選択してください</option>
+            <option value="1">18–22</option>
+            <option value="2">23–29</option>
+            <option value="3">30+</option>
+          </select>
+        </label>
+      </div>
+
+      <div>
+        <label>属性:
+          <select id="role" required>
+            <option value="">選択してください</option>
+            <option value="1">学生</option>
+            <option value="2">社会人</option>
+            <option value="3">その他</option>
+          </select>
+        </label>
+      </div>
+
+      <div>
+  　　　　<label>1回目のダミーパスワード:
+    　　　　<input type="password" id="pw1" required />
+  　　　　</label>
+  　　　　<label style="margin-left:8px;">
+    　　　　<input type="checkbox" id="pw1_show" />
+    　　　　表示
+  　　　　</label>
+　　　</div>
+
+
+      <button type="submit">送信</button>
+    </form>
+  </div>
+
+  <div id="step2" style="display:none;">
+    <div id="message_box" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;"></div>
+
+    <form id="form2">
+      <div>
+        <label>2回目のダミーパスワード:
+          <input type="password" id="pw2" required />
+        </label>
+        <label style="margin-left:8px;">
+          <input type="checkbox" id="pw2_show" />
+          表示
+        </label>
+      </div>
+
+
+      <div>
+        <p>Q1. 2回目では、1回目と比べて内容を変えましたか？</p>
+        <label><input type="radio" name="changed_pw" value="1" required> はい</label>
+        <label><input type="radio" name="changed_pw" value="0"> いいえ / ほぼ同じ</label>
+      </div>
+
+      <div>
+        <p>Q2. 今回の入力をきっかけに、本当のパスワードの見直しをしたいと思いましたか？</p>
+        <select id="intent_change" required>
+          <option value="">選択してください</option>
+          <option value="1">1 全く思わない</option>
+          <option value="2">2</option>
+          <option value="3">3 どちらとも言えない</option>
+          <option value="4">4</option>
+          <option value="5">5 とてもそう思う</option>
+        </select>
+      </div>
+
+      <button type="submit">送信（完了）</button>
+    </form>
+  </div>
+
+  <div id="step3" style="display:none;">
+    <p>ご協力ありがとうございました！データは正常に送信されました。</p>
+  </div>
+
+  <!-- zxcvbn ライブラリ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+
+  <script>
+    // ★ ここにさっきメモした WebアプリURL を入れる
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZY0Mb98T2M_dRCDo8NCEtZ34LB7yoEAVCnoncjpikBs-Q9Bxnq2v-83vARfoL9amGew/exec';
+
+    // 乱数で一意っぽいIDを作る
+    const participantId = 'P-' + Date.now() + '-' + Math.floor(Math.random() * 100000);
+
+    let condition = Math.floor(Math.random() * 3); // 0=中立,1=フィア,2=ポジティブ
+    let ageGroup = null;
+    let role = null;
+    let pw1Features = null;  // 1回目の特徴量をここに保存
+
+    // === ユーティリティ ===
+    function hasLower(str) { return /[a-z]/.test(str) ? 1 : 0; }
+    function hasUpper(str) { return /[A-Z]/.test(str) ? 1 : 0; }
+    function hasDigit(str) { return /[0-9]/.test(str) ? 1 : 0; }
+    function hasSymbol(str) { return /[^A-Za-z0-9]/.test(str) ? 1 : 0; }
+
+    // 介入メッセージ
+    function getMessageHtml(cond) {
+      if (cond === 1) {
+        // フィア条件
+        return `
+          <strong>【弱いパスワードのリスク】</strong><br>
+          単純なパスワードや、他のサービスと同じパスワードを使い回していると、
+          何らかのきっかけでパスワードが漏れたときに、
+          <strong>Amazon アカウントが不正に使われるおそれ</strong>があります。<br><br>
+          もし第三者に Amazon アカウントを乗っ取られると、<br>
+          ・勝手に商品を注文される<br>
+          ・自宅や実家の住所が見られてしまう<br>
+          ・購入履歴から、趣味や生活パターンを推測される<br>
+          など、<strong>お金やプライバシーに関わるトラブル</strong>につながる可能性があります。<br><br>
+          こうしたリスクは、<br>
+          ・充分な長さがあること<br>
+          ・英小文字・英大文字・数字・記号を混ぜること<br>
+          ・Amazon 用に他のサービスと違うパスワードを使うこと<br>
+          を意識することで、かなり減らすことができます。<br><br>
+          <hr>
+          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+          もう一度「本物に似せたダミーパスワード」を作って入力してください。
+        `;
+      } else if (cond === 2) {
+        // ポジティブ条件
+        return `
+          <strong>【強いパスワードのメリット】</strong><br>
+          調査では、ある程度の長さがあり、
+          英小文字・英大文字・数字・記号を組み合わせ、
+          Amazon 専用のパスワードを使っているユーザーは、
+          <strong>アカウント乗っ取りのリスクを大きく減らせる「セキュリティ優等生」グループ</strong>
+          に入ると報告されています。<br><br>
+          強いパスワードを1つ考えておくことで、<br>
+          ・勝手に商品を注文されにくくなる<br>
+          ・住所や購入履歴など、生活に関わる情報を守りやすくなる<br>
+          など、<strong>お金とプライバシーの両方を守りやすくなります。</strong><br><br>
+          この機会に、「自分なら Amazon アカウント用にどんな安全なパスワードを作れるか」を試してみることで、
+          <strong>上位20％レベルの安全なユーザー</strong>に近づくことができます。<br><br>
+          <hr>
+          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+          もう一度「本物に似せたダミーパスワード」を作って入力してください。
+        `;
+      } else {
+        // 中立条件
+        return `
+          <strong>【パスワードの一般的な推奨事項】</strong><br>
+          オンラインサービスでは、推測されにくいパスワードを使うことが推奨されています。
+          Amazon のようなショッピングサイトも同様に、
+          パスワードの強さがアカウント保護にとって重要だとされています。<br><br>
+          一般的な目安としては、<br>
+          ・8文字以上であること<br>
+          ・英小文字・英大文字・数字・記号を組み合わせていること<br>
+          がよく挙げられます。<br><br>
+          これらはあくまで「一般的な目安」であり、
+          実際のサービスごとに細かな条件は異なります。<br><br>
+          <hr>
+          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+          もう一度「本物に似せたダミーパスワード」を作って入力してください。
+        `;
+      }
+    }
+    // === パスワード表示・非表示トグル ===
+    const pw1Input = document.getElementById('pw1');
+    const pw1Show  = document.getElementById('pw1_show');
+    pw1Show.addEventListener('change', () => {
+    pw1Input.type = pw1Show.checked ? 'text' : 'password';
+    });
+
+    const pw2Input = document.getElementById('pw2');
+    const pw2Show  = document.getElementById('pw2_show');
+    pw2Show.addEventListener('change', () => {
+    pw2Input.type = pw2Show.checked ? 'text' : 'password';
+    });
+   
+    // === 1回目フォーム ===
+    document.getElementById('form1').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const pw1 = document.getElementById('pw1').value;
+      ageGroup = parseInt(document.getElementById('age_group').value, 10);
+      role = parseInt(document.getElementById('role').value, 10);
+
+      const res1 = zxcvbn(pw1);
+
+      pw1Features = {
+        pw1_len: pw1.length,
+        pw1_has_lower: hasLower(pw1),
+        pw1_has_upper: hasUpper(pw1),
+        pw1_has_digit: hasDigit(pw1),
+        pw1_has_symbol: hasSymbol(pw1),
+        pw1_score: res1.score,
+        pw1_guesses_log10: res1.guesses_log10
+      };
+
+      // メッセージを表示して step2へ
+      document.getElementById('message_box').innerHTML = getMessageHtml(condition);
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+    });
+
+    // === 2回目フォーム ===
+    document.getElementById('form2').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const pw2 = document.getElementById('pw2').value;
+      const res2 = zxcvbn(pw2);
+
+      const changedPw = parseInt(
+        document.querySelector('input[name="changed_pw"]:checked').value,
+        10
+      );
+      const intentScore = parseInt(document.getElementById('intent_change').value, 10);
+
+      const pw2Features = {
+        pw2_len: pw2.length,
+        pw2_has_lower: hasLower(pw2),
+        pw2_has_upper: hasUpper(pw2),
+        pw2_has_digit: hasDigit(pw2),
+        pw2_has_symbol: hasSymbol(pw2),
+        pw2_score: res2.score,
+        pw2_guesses_log10: res2.guesses_log10
+      };
+
+      const payload = {
+        participant_id: participantId,
+        timestamp: new Date().toISOString(),
+        condition: condition,
+
+        // 1回目
+        pw1_len: pw1Features.pw1_len,
+        pw1_has_lower: pw1Features.pw1_has_lower,
+        pw1_has_upper: pw1Features.pw1_has_upper,
+        pw1_has_digit: pw1Features.pw1_has_digit,
+        pw1_has_symbol: pw1Features.pw1_has_symbol,
+        pw1_score: pw1Features.pw1_score,
+        pw1_guesses_log10: pw1Features.pw1_guesses_log10,
+
+        // 2回目
+        pw2_len: pw2Features.pw2_len,
+        pw2_has_lower: pw2Features.pw2_has_lower,
+        pw2_has_upper: pw2Features.pw2_has_upper,
+        pw2_has_digit: pw2Features.pw2_has_digit,
+        pw2_has_symbol: pw2Features.pw2_has_symbol,
+        pw2_score: pw2Features.pw2_score,
+        pw2_guesses_log10: pw2Features.pw2_guesses_log10,
+
+        // アンケート
+        changed_pw_selfreport: changedPw,
+        intent_change_score: intentScore,
+
+        // 属性
+        age_group: ageGroup,
+        role: role
+      };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // 成功/失敗レスポンスを扱わない場合はこれでOK
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).catch(err => {
+        console.error('送信エラー:', err);
+      });
+
+      // 完了画面へ
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step3').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
