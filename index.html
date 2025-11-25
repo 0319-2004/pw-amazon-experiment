@@ -14,19 +14,6 @@
       --c-section4: #ffc7d4;   /* ピンク */
       --c-accent:   #0066aa;
     }
-　　 .sheet-example {
-  margin-top: 12px;
-  text-align: center;
-  font-size: 0.85rem;
-  color: #444;
-}
-
-.sheet-example img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
 
     * {
       box-sizing: border-box;
@@ -189,13 +176,6 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
-　　.data-example {
-  　　　width: 100%;          /* 親の幅を超えない */
-  　　　max-width: 700px;     /* PCでは700pxを上限にして余白を作る */
-  　　　height: auto;         /* 縦横比を維持 */
-  　　　display: block;
-  　　　margin: 12px auto 4px;  /* 中央寄せ＋上下の余白 */
-　　}
 
     /* 完了画面 */
     #step3 p {
@@ -272,17 +252,17 @@
       </div>
       <div class="section-body">
         <p>
-         このページは、大学の研究で使用している簡単なオンライン実験です。<br>
-         参加者の方に Amazon アカウントを想定してダミーのパスワードを 2 回入力していただき、
-         そのとき <strong>どのような文字列がパスワードとして選ばれるのか</strong> を集計しています。
+          このページは、大学の研究で使用している簡単なオンライン実験です。<br>
+          参加者の方に Amazon アカウントを想定してダミーのパスワードを 2 回入力していただき、
+          そのとき <strong>どのような文字列がパスワードとして選ばれるのか</strong> を集計しています。
         </p>
         <p>
-         <em>
-          This is a short online study conducted as part of a university research project.<br>
-          You will enter a dummy password twice as if for your Amazon account, and
-          we simply analyse <strong>what kinds of passwords people choose</strong>.
-        </em>
-       </p> 
+          <em>
+            This is a short online study conducted as part of a university research project.<br>
+            You will enter a dummy password twice as if for your Amazon account, and
+            we simply analyse <strong>what kinds of passwords people choose</strong>.
+          </em>
+        </p>
         <div class="note-box">
           <strong>入力するパスワードは必ず「ダミー」だけです。</strong><br>
           実際に使っているパスワードは絶対に入力しないでください。<br><br>
@@ -394,35 +374,36 @@
     </section>
 
     <!-- どんな情報が保存される？ / What data is stored? -->
-<section class="section-card section3">
-  <div class="section-heading">
-    <span>どんな情報が保存されるの？ / What data is stored?</span>
-  </div>
-  <div class="section-body">
-    <ul style="margin:8px 0 0; padding-left:1.2em; font-size:0.92rem;">
-      <li>実際のパスワードの文字列は保存されません。</li>
-      <li>
-        保存されるのは、パスワードの長さ・文字の種類
-        （小文字/大文字/数字/記号の有無）・強度スコア、
-        年齢グループ・属性だけです。
-      </li>
-      <li>これらの情報は統計的な分析のみに使用し、個人を特定することはありません。</li>
-    </ul>
+    <section class="section-card section3">
+      <div class="section-heading">
+        <span>どんな情報が保存されるの？ / What data is stored?</span>
+      </div>
+      <div class="section-body">
+        <ul style="margin:8px 0 0; padding-left:1.2em; font-size:0.92rem;">
+          <li>実際のパスワードの文字列は保存されません。</li>
+          <li>
+            保存されるのは、パスワードの長さ・文字の種類
+            （小文字/大文字/数字/記号の有無）・強度スコア、
+            年齢グループ・属性だけです。
+          </li>
+          <li>これらの情報は統計的な分析のみに使用し、個人を特定することはありません。</li>
+        </ul>
 
-    <!-- 実際に記録されるデータの例（スクリーンショット） -->
-    <img
-      src="password_example.png"
-      alt="実際に記録されるデータの例（パスワードそのものではなく特徴だけが残るイメージ）"
-      class="data-example"
-    >
-
-    <p style="font-size:0.85rem; margin-top:4px;">
-      実際に記録されるデータの例です。パスワードそのものの文字列は保存されず、
-      長さ・文字種・強度スコアなどの特徴だけが残ります。
-    </p>
-  </div>
-</section>
-
+        <!-- 追加説明：研究側が受け取る情報について -->
+        <p style="font-size:0.9rem; margin-top:10px;">
+          入力されたパスワードの<strong>具体的な文字列は研究側には送信されません</strong>。<br>
+          研究者が受け取るのは、パスワードの長さや文字種（小文字/大文字/数字/記号）、
+          強度スコア、年齢グループ・属性といった<strong>統計的な特徴だけ</strong>です。
+        </p>
+        <p style="font-size:0.85rem; margin-top:4px;">
+          <em>
+            The <strong>exact characters</strong> of your password are never sent to the researchers.<br>
+            We only receive statistical features such as length, character types
+            (lowercase / uppercase / digits / symbols), strength score, age group and role.
+          </em>
+        </p>
+      </div>
+    </section>
 
     <footer>
       青山学院大学 地球社会共生学部 古橋研究室
@@ -656,4 +637,5 @@
   </script>
 </body>
 </html>
+
 
