@@ -190,11 +190,12 @@
       cursor: not-allowed;
     }
 　　.data-example {
-  max-width: 100%;      /* カードの幅を超えない */
-  height: auto;         /* 比率を保ったまま縮小 */
-  display: block;
-  margin: 12px auto 4px; /* 上下の余白＆中央寄せ */
-}
+  　　　width: 100%;          /* 親の幅を超えない */
+  　　　max-width: 700px;     /* PCでは700pxを上限にして余白を作る */
+  　　　height: auto;         /* 縦横比を維持 */
+  　　　display: block;
+  　　　margin: 12px auto 4px;  /* 中央寄せ＋上下の余白 */
+　　}
 
     /* 完了画面 */
     #step3 p {
