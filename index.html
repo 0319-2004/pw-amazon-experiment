@@ -189,6 +189,12 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+　　.data-example {
+  max-width: 100%;      /* カードの幅を超えない */
+  height: auto;         /* 比率を保ったまま縮小 */
+  display: block;
+  margin: 12px auto 4px; /* 上下の余白＆中央寄せ */
+}
 
     /* 完了画面 */
     #step3 p {
@@ -386,27 +392,33 @@
       </div>
     </section>
 
-    <section class="section-card section3">
-      <div class="section-heading">
-       <span>どんな情報が保存されるの？ / What data is stored?</span>
-      </div>
-      <div class="section-body">
-       <ul style="margin:8px 0 0; padding-left:1.2em; font-size:0.92rem;">
-         <li>実際のパスワードの文字列は保存されません。</li>
-         <li>保存されるのは、パスワードの長さ・文字の種類（小文字/大文字/数字/記号の有無）・強度スコア、年齢グループ・属性だけです。</li>
-         <li>これらの情報は統計的な分析のみに使用し、個人を特定することはありません。</li>
-       </ul>
+    <!-- どんな情報が保存される？ / What data is stored? -->
+<section class="section-card section3">
+  <div class="section-heading">
+    <span>どんな情報が保存されるの？ / What data is stored?</span>
+  </div>
+  <div class="section-body">
+    <ul style="margin:8px 0 0; padding-left:1.2em; font-size:0.92rem;">
+      <li>実際のパスワードの文字列は保存されません。</li>
+      <li>
+        保存されるのは、パスワードの長さ・文字の種類
+        （小文字/大文字/数字/記号の有無）・強度スコア、
+        年齢グループ・属性だけです。
+      </li>
+      <li>これらの情報は統計的な分析のみに使用し、個人を特定することはありません。</li>
+    </ul>
 
-    <!-- ここからスクショ説明ブロック -->
-      <figure class="sheet-example">
-        <img src="password_example.png"
-           alt="スプレッドシートに保存されるデータの例（パスワードの長さや使用文字種などのみが記録される）">
-        <figcaption>
-        実際に記録されるデータの例です。<br>
-        パスワードそのものの文字列は保存されず、長さ・文字種・強度スコアなどの特徴だけが残ります。
-        </figcaption>
-      </figure>
-    <!-- ここまで -->
+    <!-- 実際に記録されるデータの例（スクリーンショット） -->
+    <img
+      src="パスワード実験.png"
+      alt="実際に記録されるデータの例（パスワードそのものではなく特徴だけが残るイメージ）"
+      class="data-example"
+    >
+
+    <p style="font-size:0.85rem; margin-top:4px;">
+      実際に記録されるデータの例です。パスワードそのものの文字列は保存されず、
+      長さ・文字種・強度スコアなどの特徴だけが残ります。
+    </p>
   </div>
 </section>
 
