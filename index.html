@@ -2,284 +2,545 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>Amazon パスワード実験</title>
+  <!-- ★スマホレイアウト用：これがないと拡大縮小されて崩れやすい -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>パスワード研究へのご協力のお願い | Amazon パスワード実験</title>
 
-  <!-- 見た目調整用の簡単なCSS -->
   <style>
-    /* パスワード入力欄だけ赤枠にする */
-    input[type="password"] {
-      border: 2px solid red;
-      padding: 4px 8px;
-      border-radius: 4px;
+    :root {
+      --c-section1: #9be7ff;   /* 水色 */
+      --c-section2: #c8ffb5;   /* 黄緑 */
+      --c-section3: #ffe9a7;   /* クリーム */
+      --c-section4: #ffc7d4;   /* ピンク */
+      --c-accent:   #0066aa;
     }
 
-    /* 少しだけスマホ向けに幅を広げる（お好みで） */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f6f7fb;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 20px 12px 32px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: #444;
+      margin: 0;
+    }
+
+    .hero-note {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .section-card {
+      position: relative;
+      border-radius: 18px;
+      padding: 16px 16px 18px;
+      margin-bottom: 14px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      word-wrap: break-word;
+    }
+
+    .section-card.section1 { background: var(--c-section1); }
+    .section-card.section2 { background: var(--c-section2); }
+    .section-card.section3 { background: var(--c-section3); }
+    .section-card.section4 { background: var(--c-section4); }
+
+    .section-heading {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #333;
+      font-weight: 700;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .section-body {
+      font-size: 0.95rem;
+    }
+
+    .note-box {
+      margin-top: 8px;
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.8);
+      font-size: 0.86rem;
+    }
+
+    .steps {
+      margin: 8px 0 0;
+      padding-left: 1.2em;
+      font-size: 0.92rem;
+    }
+
+    .steps li {
+      margin-bottom: 4px;
+    }
+
+    /* フォーム部分 */
+    form {
+      margin-top: 10px;
+    }
+
+    .form-row {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .form-row label {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    select,
+    input[type="password"],
+    input[type="text"] {
+      font-size: 0.95rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      outline: none;
+      max-width: 100%;
+    }
+
+    select:focus,
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--c-accent);
+      box-shadow: 0 0 0 2px rgba(0,102,170,0.2);
+    }
+
+    /* パスワード入力欄を少し目立たせる */
+    input[type="password"] {
+      border: 2px solid #ff9999;
+    }
+
+    /* メッセージボックス（介入文） */
+    #message_box {
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* ボタン */
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 18px;
+      background: var(--c-accent);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* 完了画面 */
+    #step3 p {
+      font-size: 1.05rem;
+      text-align: center;
+      margin-top: 26px;
+    }
+
+    footer {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    /* ===== スマホ用レイアウト ===== */
     @media (max-width: 600px) {
-      input[type="password"] {
+      .page {
+        padding: 14px 10px 26px;
+      }
+
+      .hero-title {
+        font-size: 1.45rem;
+        line-height: 1.4;
+      }
+
+      .hero-sub {
+        font-size: 0.92rem;
+      }
+
+      .section-card {
+        padding: 12px 10px 14px;
+        border-radius: 14px;
+      }
+
+      .section-heading {
+        font-size: 1.05rem;
+      }
+
+      .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .form-row input[type="password"],
+      .form-row input[type="text"],
+      .form-row select {
         width: 100%;
-        box-sizing: border-box;
+      }
+
+      /* チェックボックスは行を変えて表示 */
+      .form-row label input[type="checkbox"] {
+        margin-right: 4px;
       }
     }
   </style>
 </head>
 
 <body>
-  <h1>Amazon パスワード実験</h1>
-  <p>
-    このページは、大学の研究で使用している簡単なアンケートです。<br>
-    入力していただくパスワードは <strong>必ずダミー</strong> とし、
-    実際に使っているものは入力しないでください。<br>
-    送信されたデータは統計的にのみ利用され、個人を特定する目的では使用しません。
-  </p>
+  <div class="page">
+    <header class="hero">
+      <h1 class="hero-title">パスワード研究協力のお願い</h1>
+      <p class="hero-sub">ダミーパスワードと短いメッセージで、パスワード行動について調べるオンライン実験です。</p>
+      <p class="hero-note">
+        This is a short online study about passwords.  
+        Please <strong>never type your real password</strong>; only enter a dummy one.
+      </p>
+    </header>
 
-  <div id="step1">
-    <p>
-       あなたは、<strong>自分の Amazon アカウント</strong>のために、
-       新しいパスワードを設定するとします。<br/>
-       ここでは、実際に使っているパスワードではなく、
-       <strong>「本物に似せたダミーパスワード」</strong>を入力してください。<br/>
-       ※本物のパスワードは絶対に入力しないでください。<br/><br/>
-
-       <em>
-        Imagine you are setting a new password for <strong>your own Amazon account</strong>.<br/>
-        Here, please enter a <strong>dummy password that only looks similar to your real one</strong>,<br/>
-        and never type your actual password.<br/>
-       </em>
-    </p>
-
-    <form id="form1">
-      <div>
-        <label>年齢グループ/age group:
-          <select id="age_group" required>
-            <option value="">選択してください</option>
-            <option value="1">18–22</option>
-            <option value="2">23–29</option>
-            <option value="3">30+</option>
-          </select>
-        </label>
+    <!-- 1. この研究は何？ -->
+    <section id="step1" class="section-card section1">
+      <div class="section-heading">
+        <span class="badge-num">1</span>
+        <span>この研究は何？ / What is this study?</span>
       </div>
-
-      <div>
-        <label>属性 / Role:
-          <select id="role" required>
-            <option value="">選択してください / Please select</option>
-            <option value="1">学生 / Student</option>
-            <option value="2">社会人 / Working adult</option>
-            <option value="3">その他 / Other</option>
-          </select>
-        </label>
-      </div>
-
-
-      <div>
-  　　　　<label>1回目のダミーパスワード:
-    　　　　<input type="password" id="pw1" required />
-  　　　　</label>
-  　　　　<label style="margin-left:8px;">
-    　　　　<input type="checkbox" id="pw1_show" />
-    　　　　表示
-  　　　　</label>
-　　　</div>
-
-
-      <button type="submit">送信</button>
-    </form>
-  </div>
-
-  <div id="step2" style="display:none;">
-    <div id="message_box" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;"></div>
-
-    <form id="form2">
-      <div>
-        <label>2回目のダミーパスワード:
-          <input type="password" id="pw2" required />
-        </label>
-        <label style="margin-left:8px;">
-          <input type="checkbox" id="pw2_show" />
-          表示
-        </label>
-      </div>
-
-
-      <div>
+      <div class="section-body">
         <p>
-          Q1. 2回目では、1回目と比べて内容を変えましたか？<br/>
-          <em>Did you change the content of your password in the second input compared to the first one?</em>
+          このページは、大学の研究で使用している簡単なアンケートです。<br>
+          Amazon アカウントを想定して <strong>ダミーのパスワード</strong> を 2 回入力してもらい、
+          その間に表示される短いメッセージがパスワードの選び方にどんな影響を与えるかを調べています。
         </p>
-        <label><input type="radio" name="changed_pw" value="1" required> はい</label>
-        <label><input type="radio" name="changed_pw" value="0"> いいえ / ほぼ同じ</label>
-      </div>
 
-      <div>
+        <div class="note-box">
+          <strong>入力するパスワードは必ず「ダミー」だけです。</strong><br>
+          実際に使っているパスワードは絶対に入力しないでください。<br><br>
+          <em>
+            Please enter a <strong>dummy password</strong> that only looks similar to your real one.  
+            Never type your actual password.
+          </em>
+        </div>
+
+        <!-- フォーム：1回目入力 -->
+        <form id="form1">
+          <div class="form-row">
+            <label for="age_group">年齢グループ / age group：</label>
+            <select id="age_group" required>
+              <option value="">選択してください</option>
+              <option value="1">18–22</option>
+              <option value="2">23–29</option>
+              <option value="3">30+</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="role">属性 / Role：</label>
+            <select id="role" required>
+              <option value="">選択してください / Please select</option>
+              <option value="1">学生 / Student</option>
+              <option value="2">社会人 / Working adult</option>
+              <option value="3">その他 / Other</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="pw1">1回目のダミーパスワード：</label>
+            <input type="password" id="pw1" required />
+            <label>
+              <input type="checkbox" id="pw1_show" />
+              表示 / Show
+            </label>
+          </div>
+
+          <button type="submit">次へ（1回目を送信）</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. メッセージ表示 ＋ 2回目入力 -->
+    <section id="step2" class="section-card section2" style="display:none;">
+      <div class="section-heading">
+        <span class="badge-num">2</span>
+        <span>メッセージを読んで、もう一度入力</span>
+      </div>
+      <div class="section-body">
+        <p style="margin-top:0;">
+          まず、パスワードに関する短いメッセージをご覧ください。その後、もう一度ダミーパスワードを入力し、
+          2つの簡単な質問にお答えください。
+        </p>
+
+        <div id="message_box"></div>
+
+        <form id="form2">
+          <div class="form-row" style="margin-top:12px;">
+            <label for="pw2">2回目のダミーパスワード：</label>
+            <input type="password" id="pw2" required />
+            <label>
+              <input type="checkbox" id="pw2_show" />
+              表示 / Show
+            </label>
+          </div>
+
+          <div class="form-row" style="flex-direction: column; align-items: flex-start;">
+            <p style="margin:4px 0;">
+              Q1. 2回目では、1回目と比べて内容を変えましたか？<br/>
+              <em>Did you change the content of your password in the second input compared to the first one?</em>
+            </p>
+            <label><input type="radio" name="changed_pw" value="1" required> はい / Yes</label>
+            <label><input type="radio" name="changed_pw" value="0"> いいえ・ほぼ同じ / No or almost same</label>
+          </div>
+
+          <div class="form-row" style="flex-direction: column; align-items: flex-start;">
+            <p style="margin:4px 0;">
+              Q2. 今回の入力をきっかけに、本当のパスワードの見直しをしたいと思いましたか？<br/>
+              <em>Did this task make you feel that you want to review your real passwords?</em>
+            </p>
+            <select id="intent_change" required>
+              <option value="">選択してください</option>
+              <option value="1">1 全く思わない / Not at all</option>
+              <option value="2">2</option>
+              <option value="3">3 どちらとも言えない / Neutral</option>
+              <option value="4">4</option>
+              <option value="5">5 とてもそう思う / Very much</option>
+            </select>
+          </div>
+
+          <button type="submit">送信（完了）</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 3. 完了画面 -->
+    <section id="step3" class="section-card section4" style="display:none;">
+      <div class="section-heading">
+        <span class="badge-num">3</span>
+        <span>ご協力ありがとうございました</span>
+      </div>
+      <div class="section-body">
         <p>
-          Q2. 今回の入力をきっかけに、本当のパスワードの見直しをしたいと思いましたか？<br/>
-          <em>Did this task make you feel that you want to review your real passwords?</em>
+          アンケートへのご参加、ありがとうございました。<br>
+          いただいたデータは統計的にのみ利用し、個人を特定する目的では一切使用しません。
         </p>
-        <select id="intent_change" required>
-          <option value="">選択してください</option>
-          <option value="1">1 全く思わない / Not at all</option>
-          <option value="2">2</option>
-          <option value="3">3 どちらとも言えない / Neutral</option>
-          <option value="4">4</option>
-          <option value="5">5 とてもそう思う / Very much</option>
-        </select>
       </div>
+    </section>
 
-      <button type="submit">送信（完了）</button>
-    </form>
-  </div>
+    <!-- 4. どんな情報が保存される？ -->
+    <section class="section-card section3">
+      <div class="section-heading">
+        <span class="badge-num">4</span>
+        <span>どんな情報が保存されるの？ / What data is stored?</span>
+      </div>
+      <div class="section-body">
+        <ul style="margin:8px 0 0; padding-left:1.2em; font-size:0.92rem;">
+          <li>実際のパスワードの文字列は保存されません。</li>
+          <li>保存されるのは、パスワードの長さ・文字の種類（小文字/大文字/数字/記号の有無）・強度スコア、年齢グループ・属性だけです。</li>
+          <li>これらの情報は統計的な分析のみに使用し、個人を特定することはありません。</li>
+        </ul>
+      </div>
+    </section>
 
-  <div id="step3" style="display:none;">
-    <p>ご協力ありがとうございました！データは正常に送信されました。</p>
+    <footer>
+      青山学院大学 地球社会共生学部 古橋研究室
+    </footer>
   </div>
 
   <!-- zxcvbn ライブラリ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
 
   <script>
-    // ★ ここにさっきメモした WebアプリURL を入れる
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZY0Mb98T2M_dRCDo8NCEtZ34LB7yoEAVCnoncjpikBs-Q9Bxnq2v-83vARfoL9amGew/exec';
 
-    // 乱数で一意っぽいIDを作る
     const participantId = 'P-' + Date.now() + '-' + Math.floor(Math.random() * 100000);
 
     let condition = Math.floor(Math.random() * 3); // 0=中立,1=フィア,2=ポジティブ
     let ageGroup = null;
     let role = null;
-    let pw1Features = null;  // 1回目の特徴量をここに保存
+    let pw1Features = null;
 
-    // === ユーティリティ ===
     function hasLower(str) { return /[a-z]/.test(str) ? 1 : 0; }
     function hasUpper(str) { return /[A-Z]/.test(str) ? 1 : 0; }
     function hasDigit(str) { return /[0-9]/.test(str) ? 1 : 0; }
     function hasSymbol(str) { return /[^A-Za-z0-9]/.test(str) ? 1 : 0; }
-    // 介入メッセージ（日英併記）
-function getMessageHtml(cond) {
-  if (cond === 1) {
-    // フィア条件（恐怖フレーミング）
-    return `
-      <strong>【弱いパスワードのリスク】</strong><br>
-      単純なパスワードや、他のサービスと同じパスワードを使い回していると、
-      パスワードが漏れたときに <strong>Amazon アカウントが不正に使われるおそれ</strong>があります。<br><br>
-      もし第三者に Amazon アカウントを乗っ取られると、<br>
-      ・勝手に商品を注文される<br>
-      ・自宅や実家の住所が見られてしまう<br>
-      ・購入履歴から、趣味や生活パターンを推測される<br>
-      など、<strong>お金やプライバシーに関わるトラブル</strong>につながる可能性があります。<br><br>
-      こうしたリスクは、<br>
-      ・充分な長さがあること<br>
-      ・英小文字・英大文字・数字・記号を混ぜること<br>
-      ・Amazon 用に他のサービスと違うパスワードを使うこと<br>
-      を意識することで、かなり減らすことができます。<br><br>
 
-      <em>
-        <strong>[Risks of weak passwords]</strong><br>
-        If you use simple passwords or reuse the same password across services,
-        your Amazon account may be misused if the password is leaked.<br><br>
-        If someone takes over your Amazon account, they may:<br>
-        ・Order items without your permission<br>
-        ・See your home or family address<br>
-        ・Infer your hobbies and lifestyle from your purchase history<br>
-        which can cause financial and privacy problems.<br><br>
-        These risks can be reduced by:<br>
-        ・Using sufficiently long passwords<br>
-        ・Mixing lowercase, uppercase, digits, and symbols<br>
-        ・Using a different password for Amazon than for other services<br><br>
-      </em>
+    function getMessageHtml(cond) {
+      if (cond === 1) {
+        return `
+          <strong>【弱いパスワードのリスク】</strong><br>
+          単純なパスワードや、他のサービスと同じパスワードを使い回していると、
+          パスワードが漏れたときに <strong>Amazon アカウントが不正に使われるおそれ</strong>があります。<br><br>
+          もし第三者に Amazon アカウントを乗っ取られると、<br>
+          ・勝手に商品を注文される<br>
+          ・自宅や実家の住所が見られてしまう<br>
+          ・購入履歴から、趣味や生活パターンを推測される<br>
+          など、<strong>お金やプライバシーに関わるトラブル</strong>につながる可能性があります。<br><br>
+          こうしたリスクは、<br>
+          ・充分な長さがあること<br>
+          ・英小文字・英大文字・数字・記号を混ぜること<br>
+          ・Amazon 用に他のサービスと違うパスワードを使うこと<br>
+          を意識することで、かなり減らすことができます。<br><br>
 
-      <hr>
-      それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
-      もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
-      <em>
-        Now, please imagine your Amazon account again and enter another dummy password.
-      </em>
-    `;
-  } else if (cond === 2) {
-    // ポジティブ条件（ゲインフレーミング）
-    return `
-      <strong>【強いパスワードのメリット】</strong><br>
-      調査では、ある程度の長さがあり、
-      英小文字・英大文字・数字・記号を組み合わせ、
-      Amazon 専用のパスワードを使っているユーザーは、
-      <strong>アカウント乗っ取りのリスクを大きく減らせる「セキュリティ優等生」グループ</strong>
-      に入ると報告されています。<br><br>
-      強いパスワードを1つ考えておくことで、<br>
-      ・勝手に商品を注文されにくくなる<br>
-      ・住所や購入履歴など、生活に関わる情報を守りやすくなる<br>
-      など、<strong>お金とプライバシーの両方を守りやすくなります。</strong><br><br>
-      この機会に、「自分なら Amazon アカウント用にどんな安全なパスワードを作れるか」を試してみることで、
-      <strong>上位20％レベルの安全なユーザー</strong>に近づくことができます。<br><br>
+          <em>
+            <strong>[Risks of weak passwords]</strong><br>
+            If you use simple passwords or reuse the same password across services,
+            your Amazon account may be misused if the password is leaked.<br><br>
+            If someone takes over your Amazon account, they may:<br>
+            ・Order items without your permission<br>
+            ・See your home or family address<br>
+            ・Infer your hobbies and lifestyle from your purchase history<br>
+            which can cause financial and privacy problems.<br><br>
+            These risks can be reduced by:<br>
+            ・Using sufficiently long passwords<br>
+            ・Mixing lowercase, uppercase, digits, and symbols<br>
+            ・Using a different password for Amazon than for other services<br><br>
+          </em>
 
-      <em>
-        <strong>[Benefits of strong passwords]</strong><br>
-        Studies report that users who have long passwords, combine lowercase, uppercase,
-        digits, and symbols, and use a dedicated password for Amazon
-        belong to a “high-security group” with much lower account takeover risk.<br><br>
-        By creating a strong password, you can:<br>
-        ・Reduce the chance of unauthorized orders<br>
-        ・Better protect your address and purchase history<br>
-        and more easily protect both your money and privacy.<br><br>
-        This task is a chance to try what kind of safe Amazon password you can design,
-        and to move closer to the top 20% of secure users.<br><br>
-      </em>
+          <hr>
+          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+          もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
+          <em>
+            Now, please imagine your Amazon account again and enter another dummy password.
+          </em>
+        `;
+      } else if (cond === 2) {
+        return `
+          <strong>【強いパスワードのメリット】</strong><br>
+          調査では、ある程度の長さがあり、
+          英小文字・英大文字・数字・記号を組み合わせ、
+          Amazon 専用のパスワードを使っているユーザーは、
+          <strong>アカウント乗っ取りのリスクを大きく減らせる「セキュリティ優等生」グループ</strong>
+          に入ると報告されています。<br><br>
+          強いパスワードを1つ考えておくことで、<br>
+          ・勝手に商品を注文されにくくなる<br>
+          ・住所や購入履歴など、生活に関わる情報を守りやすくなる<br>
+          など、<strong>お金とプライバシーの両方を守りやすくなります。</strong><br><br>
+          この機会に、「自分なら Amazon アカウント用にどんな安全なパスワードを作れるか」を試してみることで、
+          <strong>上位20％レベルの安全なユーザー</strong>に近づくことができます。<br><br>
 
-      <hr>
-      それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
-      もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
-      <em>
-        Now, please imagine your Amazon account again and enter another dummy password.
-      </em>
-    `;
-  } else {
-    // 中立条件
-    return `
-      <strong>【パスワードの一般的な推奨事項】</strong><br>
-      オンラインサービスでは、推測されにくいパスワードを使うことが推奨されています。
-      Amazon のようなショッピングサイトも同様に、
-      パスワードの強さがアカウント保護にとって重要だとされています。<br><br>
+          <em>
+            <strong>[Benefits of strong passwords]</strong><br>
+            Studies report that users who have long passwords, combine lowercase, uppercase,
+            digits, and symbols, and use a dedicated password for Amazon
+            belong to a “high-security group” with much lower account takeover risk.<br><br>
+            By creating a strong password, you can:<br>
+            ・Reduce the chance of unauthorized orders<br>
+            ・Better protect your address and purchase history<br>
+            and more easily protect both your money and privacy.<br><br>
+            This task is a chance to try what kind of safe Amazon password you can design,
+            and to move closer to the top 20% of secure users.<br><br>
+          </em>
 
-      一般的な目安としては、<br>
-      ・8文字以上であること<br>
-      ・英小文字・英大文字・数字・記号を組み合わせていること<br>
-      がよく挙げられます。<br><br>
+          <hr>
+          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+          もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
+          <em>
+            Now, please imagine your Amazon account again and enter another dummy password.
+          </em>
+        `;
+      } else {
+        return `
+          <strong>【パスワードの一般的な推奨事項】</strong><br>
+          オンラインサービスでは、推測されにくいパスワードを使うことが推奨されています。
+          Amazon のようなショッピングサイトも同様に、
+          パスワードの強さがアカウント保護にとって重要だとされています。<br><br>
 
-      <em>
-        <strong>[General advice on passwords]</strong><br>
-        Many online services recommend using passwords that are hard to guess.
-        For shopping sites like Amazon, password strength is also important for protecting your account.<br><br>
-        Common guidelines include:<br>
-        ・Using at least 8 characters<br>
-        ・Combining lowercase letters, uppercase letters, digits, and symbols<br><br>
-      </em>
+          一般的な目安としては、<br>
+          ・8文字以上であること<br>
+          ・英小文字・英大文字・数字・記号を組み合わせていること<br>
+          がよく挙げられます。<br><br>
 
-      これらはあくまで「一般的な目安」であり、
-      実際のサービスごとに細かな条件は異なります。<br><br>
+          <em>
+            <strong>[General advice on passwords]</strong><br>
+            Many online services recommend using passwords that are hard to guess.
+            For shopping sites like Amazon, password strength is also important for protecting your account.<br><br>
+            Common guidelines include:<br>
+            ・Using at least 8 characters<br>
+            ・Combining lowercase letters, uppercase letters, digits, and symbols<br><br>
+          </em>
 
-      <hr>
-      それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
-      もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
-      <em>
-        Now, please imagine your Amazon account again and enter another dummy password.
-      </em>
-    `;
-  }
-}
+          これらはあくまで「一般的な目安」であり、
+          実際のサービスごとに細かな条件は異なります。<br><br>
 
-    
-    // === パスワード表示・非表示トグル ===
+          <hr>
+          それでは、先ほどと同じように <strong>自分の Amazon アカウント</strong>をイメージして、
+          もう一度「本物に似せたダミーパスワード」を作って入力してください。<br/>
+          <em>
+            Now, please imagine your Amazon account again and enter another dummy password.
+          </em>
+        `;
+      }
+    }
+
     const pw1Input = document.getElementById('pw1');
     const pw1Show  = document.getElementById('pw1_show');
     pw1Show.addEventListener('change', () => {
-    pw1Input.type = pw1Show.checked ? 'text' : 'password';
+      pw1Input.type = pw1Show.checked ? 'text' : 'password';
     });
 
     const pw2Input = document.getElementById('pw2');
     const pw2Show  = document.getElementById('pw2_show');
     pw2Show.addEventListener('change', () => {
-    pw2Input.type = pw2Show.checked ? 'text' : 'password';
+      pw2Input.type = pw2Show.checked ? 'text' : 'password';
     });
-   
-    // === 1回目フォーム ===
+
     document.getElementById('form1').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -299,13 +560,11 @@ function getMessageHtml(cond) {
         pw1_guesses_log10: res1.guesses_log10
       };
 
-      // メッセージを表示して step2へ
       document.getElementById('message_box').innerHTML = getMessageHtml(condition);
       document.getElementById('step1').style.display = 'none';
       document.getElementById('step2').style.display = 'block';
     });
 
-    // === 2回目フォーム ===
     document.getElementById('form2').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -333,7 +592,6 @@ function getMessageHtml(cond) {
         timestamp: new Date().toISOString(),
         condition: condition,
 
-        // 1回目
         pw1_len: pw1Features.pw1_len,
         pw1_has_lower: pw1Features.pw1_has_lower,
         pw1_has_upper: pw1Features.pw1_has_upper,
@@ -342,7 +600,6 @@ function getMessageHtml(cond) {
         pw1_score: pw1Features.pw1_score,
         pw1_guesses_log10: pw1Features.pw1_guesses_log10,
 
-        // 2回目
         pw2_len: pw2Features.pw2_len,
         pw2_has_lower: pw2Features.pw2_has_lower,
         pw2_has_upper: pw2Features.pw2_has_upper,
@@ -351,27 +608,22 @@ function getMessageHtml(cond) {
         pw2_score: pw2Features.pw2_score,
         pw2_guesses_log10: pw2Features.pw2_guesses_log10,
 
-        // アンケート
         changed_pw_selfreport: changedPw,
         intent_change_score: intentScore,
 
-        // 属性
         age_group: ageGroup,
         role: role
       };
 
       fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors', // 成功/失敗レスポンスを扱わない場合はこれでOK
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       }).catch(err => {
         console.error('送信エラー:', err);
       });
 
-      // 完了画面へ
       document.getElementById('step2').style.display = 'none';
       document.getElementById('step3').style.display = 'block';
     });
