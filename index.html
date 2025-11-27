@@ -198,7 +198,7 @@
     .hero-sub a:hover {
       opacity: 0.85;
     }
-
+    .nowrap { white-space: nowrap; }
 
     /* ===== スマホ用レイアウト ===== */
     @media (max-width: 600px) {
@@ -248,14 +248,14 @@
     <header class="hero">
       <h1 class="hero-title">パスワード研究協力のお願い</h1>
       <p class="hero-sub">
-  　　　ダミーパスワードと短いメッセージで、
-  　　　<a href="https://github.com/0319-2004/pw-amazon-experiment"
-     　　　target="_blank"
-     　　　rel="noopener noreferrer">
-    　　　パスワード行動について調べるオンライン実験
-  　　　</a>
-  　　　です。
-　　　 </p>
+  　　　　ダミーパスワードと短いメッセージで、
+       <span class="nowrap">
+        <a href="https://github.com/0319-2004/pw-amazon-experiment"
+         target="_blank" rel="noopener noreferrer">
+         パスワード行動について調べるオンライン実験
+        </a>です。
+       </span>
+      </p>
 
       <p class="hero-note">
         This is a short online study about passwords.  
