@@ -190,6 +190,15 @@
       font-size: 0.85rem;
       color: #555;
     }
+    .hero-sub a {
+     color: var(--c-accent);
+     font-weight: 700;
+     text-decoration: underline;
+    }
+    .hero-sub a:hover {
+      opacity: 0.85;
+    }
+
 
     /* ===== スマホ用レイアウト ===== */
     @media (max-width: 600px) {
@@ -238,7 +247,16 @@
   <div class="page">
     <header class="hero">
       <h1 class="hero-title">パスワード研究協力のお願い</h1>
-      <p class="hero-sub">ダミーパスワードと短いメッセージで、パスワード行動について調べるオンライン実験です。</p>
+      <p class="hero-sub">
+  　　　ダミーパスワードと短いメッセージで、
+  　　　<a href="https://github.com/0319-2004/pw-amazon-experiment"
+     　　　target="_blank"
+     　　　rel="noopener noreferrer">
+    　　　パスワード行動について調べるオンライン実験
+  　　　</a>
+  　　　です。
+　　　 </p>
+
       <p class="hero-note">
         This is a short online study about passwords.  
         Please <strong>never type your real password</strong>; only enter a dummy one.
